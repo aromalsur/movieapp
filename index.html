@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch Counrty</title>
+    <!-- bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</head>
+
+<style>
+    .card1 {
+  width: 300px;
+  height: 354px;
+  padding: 0 15px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+  background-color: rgba(0, 0, 0, 0.566);
+  border-radius: 20px;
+}
+
+.card1 > * {
+  margin: 0;
+}
+
+.card__title {
+  font-size: 23px;
+  font-weight: 900;
+  color: #333;
+}
+
+.card__content {
+  font-size: 13px;
+  line-height: 18px;
+  color: #333;
+}
+
+.card__form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card__form input {
+  margin-top: 10px;
+  outline: 0;
+  background: rgb(255, 255, 255);
+  box-shadow: transparent 0px 0px 0px 1px inset;
+  padding: 0.6em;
+  border-radius: 14px;
+  border: 1px solid #333;
+  color: black;
+  
+}
+
+.card__form button {
+  border: 0;
+  background: #111;
+  color: #fff;
+  padding: 0.68em;
+  border-radius: 14px;
+  font-weight: bold;
+}
+
+.sign-up:hover {
+  opacity: 0.8;
+} 
+
+
+.loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 150px;
+  height: 150px;
+  background: transparent;
+  border: 3px solid rgba(0, 102, 255, 0.1);
+  border-radius: 50%;
+  text-align: center;
+  line-height: 150px;
+  font-family: sans-serif;
+  font-size: 20px;
+  color: #0066ff;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-shadow: 0 0 10px #0066ff;
+  box-shadow: 0 0 20px rgba(0, 0, 0, .15);
+}
+
+.loader::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  width: 100%;
+  height: 100%;
+  border: 3px solid transparent;
+  border-top: 3px solid #0066ff;
+  border-right: 3px solid #0066ff;
+  border-radius: 50%;
+  animation: animateC 2s linear infinite;
+}
+
+.loader span {
+  display: block;
+  position: absolute;
+  top: calc(50% - 2px);
+  left: 50%;
+  width: 50%;
+  height: 4px;
+  background: transparent;
+  transform-origin: left;
+  animation: animate 2s linear infinite;
+}
+
+.loader span::before {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #00aeff;
+  top: -6px;
+  right: -8px;
+  box-shadow: 0 0 20px 5px #0066ff;
+  
+}
+
+@keyframes animateC {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes animate {
+  0% {
+    transform: rotate(45deg);
+  }
+
+  100% {
+    transform: rotate(405deg);
+  }
+}
+</style>
+
+
+<body style="background-image: url(https://www.pixel-creation.com/wp-content/uploads/download-movie-theater-wallpapers-to-your-cell-phone-movie-hd.jpg);background-size:cover;background-repeat: no-repeat;">
+
+
+
+  <div class="loader" id="preloader" >Loading
+    <span></span>
+  </div>
+ 
+    <!-- As a link -->
+
+  
+  <!-- As a heading -->
+  
+
+
+    <div class="container mt-5"  >
+        <div class="row">
+            
+            <div class="col-md-6" >
+                <div class="card1">
+                    <span class="card__title"><h3 style="color: white;">MOVIE SEARCH ENGINE</h3></span>
+                    <p class="card__content">Get your movie in one click
+                    </p>
+                    <div class="card__form">
+                        <input placeholder="Enter Movie Name" id="mname" type="text">
+                        
+                        <button class="sign-up"onclick="fetchdata()" id="s" style="border: 1px solid red;"> Search</button>
+                    </div>
+                </div>
+
+            </div>
+
+            
+
+            
+
+
+
+
+            
+                <div class="col-md-6 mb-5 " id="result1" style="text-align: center;">
+
+
+
+
+                
+            </div>
+
+                
+    
+    
+    
+    
+            </div>
+         
+       
+        
+           
+        
+    </div>
+    
+</body>
+
+<script>
+  function triggerbtnclick(){
+    document.getElementById("btn").click()
+
+
+  }
+
+   var loader=document.getElementById("preloader")
+  window.addEventListener("load",function(){
+    loader.style.display="none"
+  })
+
+ 
+    function fetchdata(){
+
+      
+        // get value from input
+       var inputname=mname.value
+       var lansel=document.getElementsByClassName("dropdown-item")
+       
+    //    fetch api
+    fetch(`https://www.omdbapi.com/?t=${inputname}&apikey=e53d04a8`)
+    .then(data=>data.json())
+    .then(arraydata=>displayData(arraydata))
+
+    .catch(error=>alert("Failed to display data"))
+
+    }
+
+
+    function displayData(arraydata){
+        var Movie_name=arraydata.Title
+        var Year=arraydata.Year
+        var Type=arraydata.Type
+        var Poster=arraydata.Poster
+        var Rating=arraydata.imdbRating
+        var Director=arraydata.Director
+        var Writer=arraydata.Writer
+        var Runtime=arraydata.Runtime
+        var Langauge=arraydata.Language
+        var Cast=arraydata.Actors
+        var Genre=arraydata.Genre
+        var Plot=arraydata.Plot
+        // console.log(Movie_name,Year,Type,Poster,Id);
+
+
+        htmlData=`
+<style>
+
+ 
+
+        .card {
+  width: 400px;
+
+  border-radius: 20px;
+  background-color: rgba(0, 0, 0, 0.566);
+ 
+  overflow: hidden;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 20px 0px;
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.card .top-section {
+  height: 150px;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.card .top-section .border {
+  border-bottom-right-radius: 10px;
+  height: 30px;
+  width: 130px;
+  background: white;
+  background: #1b233d;
+  position: relative;
+  transform: skew(-40deg);
+  box-shadow: -10px -10px 0 0 #1b233d;
+}
+
+.card .top-section .border::before {
+  content: "";
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  top: 0;
+  right: -15px;
+  background: rgba(255, 255, 255, 0);
+  border-top-left-radius: 10px;
+  box-shadow: -5px -5px 0 2px #1b233d;
+}
+
+
+
+.card .top-section .icons {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 30px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.card .top-section .icons .logo {
+  height: 100%;
+  aspect-ratio: 1;
+  padding: 7px 0 7px 15px;
+}
+
+.card .top-section .icons .logo .top-section {
+  height: 100%;
+}
+
+.card .top-section .icons .social-media {
+  height: 100%;
+  padding: 8px 15px;
+  display: flex;
+  gap: 7px;
+}
+
+.card .top-section .icons .social-media .svg {
+  height: 100%;
+  fill: #1b233d;
+}
+
+.card .top-section .icons .social-media .svg:hover {
+  fill: white;
+}
+
+.card .bottom-section {
+  margin-top: 285px;
+  padding: 10px 5px;
+}
+
+.card .bottom-section .title {
+  display: block;
+  font-size: 30px;
+  font-weight: bolder;
+  color: white;
+  text-align: center;
+  letter-spacing: 2px;
+  margin-top:10px;
+}
+
+.card .bottom-section .row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.card .bottom-section .row .item {
+  flex: 30%;
+  text-align: center;
+  padding: 5px;
+  color: rgba(170, 222, 243, 0.721);
+}
+
+.card .bottom-section .row .item .big-text {
+  font-size: 15px;
+  display: block;
+  font-weight: bolder;
+}
+
+.card .bottom-section .row .item .regular-text {
+  font-size: 13px;
+}
+
+.card .bottom-section .row .item:nth-child(2) {
+  border-left: 1px solid rgba(255, 255, 255, 0.126);
+  border-right: 1px solid rgba(255, 255, 255, 0.126);
+}
+</style>
+        
+        
+        
+        <div class="card">
+  <div class="top-section">
+    <div class="top-section" style="text-align: center;margin-left:20px ">
+        
+        <img src=${Poster} style="width:350px;height:450px;border-radius:15px;padding-top:15px" shadow>
+           
+        </div>
+  </div>
+  <div class="bottom-section">
+    <span class="title">${Movie_name}</span>
+    <div class="row row1">
+      <div class="item">
+        <span class="big-text">${Rating}</span>
+        <span class="regular-text">IMDB ID</span>
+      </div>
+      <div class="item">
+        <span class="big-text">${Type}</span>
+        <span class="regular-text">TYPE</span>
+      </div>
+      <div class="item">
+        <span class="big-text">${Year}</span>
+        <span class="regular-text">YEAR</span>
+ 
+      </div>
+    </div>
+  </div>
+  <p style="color: rgba(255, 255, 255, 0.677); text-align: start;margin-left:25px; margin-top:5px">${Plot} </p>
+  <h6 style="color: rgba(255, 255, 255, 0.677); text-align: start;margin-left:25px; margin-top:5px">Duration:${Runtime} </h6>
+  <h6 style="color: rgba(255, 255, 255, 0.677); text-align: start;margin-left:25px; margin-top:5px">Language:${Langauge} </h6>
+  <h6 style="color: rgba(255, 255, 255, 0.677); text-align: start;margin-left:25px; margin-top:5px">Director:${Director} </h6>
+  <h6 style="color: rgba(255, 255, 255, 0.677); text-align: start;margin-left:25px; margin-top:5px">Genre   :${Genre} </h6>
+  <h6 style="color: rgba(255, 255, 255, 0.677); text-align: start;margin-left:25px; margin-top:5px">Cast    :${Cast} </h6>
+  <h6 style="color: rgba(255, 255, 255, 0.677); text-align: start;margin-left:25px;margin-top:5px;margin-bottom:10px">Writer  :${Writer} </h6>
+
+  </div>
+  <div>
+ 
+</div>
+
+        
+        
+        
+        
+        
+        
+        
+        
+        `
+        result1.innerHTML=htmlData
+    }
+</script>
+
+
+
+
+</html>
